@@ -106,9 +106,9 @@ User will upload data and return HTML format resume
 always use different color or styling"""
 
 final_prompt = prompt + resume_maker_prompt()
-
-user_details = """user details: given below:
-Give Python Developer Resume"""
+details = input("enter your details")
+user_details = f"""user details: given below:
+Give Python Developer Resume{details}"""
 
 query = final_prompt + user_details
 
