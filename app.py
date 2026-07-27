@@ -1,11 +1,16 @@
-import streamlit as st 
-# streamlit :- web based app making 
+import streamlit as st
+# streamlit: Web based app making
 # lite python framework
 
 st.title("AI Resume Maker")
-st.markdown("""## user can create or download AI created resume based on high ATS Score """)
 
-#================AGENT CODE==============
+st.markdown("""## User can create or
+download AI created Resume based on high ATS
+Score""")
+
+
+#==================AGENT CODE===================
+# Step 2: Load Modules
 
 import os
 import time
@@ -20,18 +25,21 @@ import numpy as np
 import streamlit as st
 from langchain_community.document_loaders import PyMuPDFLoader
 
-#===========API KEY LOAD================
 
-GOOGLE_API_KEY = st.sidebar.text_input("GOOGLE_API_KEY",type ="password")
-GROQ_API_KEY = st.sidebar.text_input("GROQ_API_KEY ",type ="password")
-TAVILY_API_KEY = st.sidebar.text_input("TAVILY_API_KEY",type ="password")
+# ================API KEY LOAD===================
 
-#===========model building===============
+GOOGLE_API_KEY = st.sidebar.text_input("GOOGLE_API_KEY",type="password")
+GROQ_API_KEY = st.sidebar.text_input("GROQ_API_KEY",type="password")
+TAVILY_API_KEY = st.sidebar.text_input("TAVILY_API_KEY",type="password")
+
+
+# ===============MODEL BUILDING=============
 model = ChatGoogleGenerativeAI(
-    model = "gemini-3.5-flash-lite",
+    model = 'gemini-3.5-flash-lite',
     google_api_key = GOOGLE_API_KEY
 )
-# tool 
+
+# tool
 def search_recent_news_jobs(query):
   """This function helps to search
   recent news or recent jobs
@@ -40,8 +48,9 @@ def search_recent_news_jobs(query):
   It should return trending news and jobs link"""
   client = TavilyClient(
       api_key = TAVILY_API_KEY
-  )
+      )
   return client.search(query)
+
 
 
 # agent creation
@@ -53,52 +62,66 @@ agent = create_agent(
 )
 
 
-#==========Prompt Generator======================
-def prompt_generator(agent):
-  """This function helps to give detailed prompt
-  followed by chain of thought and persona based prompting
-  main task is to give deatiled porompt to builed resume
-  for studnets and experienced person based on there personal information """
+# ==== PROMPT GENERATOR================
+def prompt_generator(agent = agent):
+  """This function help to give detailed prompt
+  followed by Chain of thoughts and
+  persona based prompting, main task is to give
+  detailed prompt to build Resume for
+  Students or Experienced person
+  Based on their given personal information.
+  """
 
   prompt = """You are a senior HR resume analyzer,
   main task is to give
   detailed prompt to build Resume for
   Students or Experienced person
   Based on their given personal information.
-  system instruction i want moel to gennerate resume in html format, include that in prompt """
+  System Instruction I want Model to generate resume
+  in HTML format , include that in prompt"""
+
   response = agent.invoke(prompt)
   file_name = 'prompt.py'
   with open(file_name, 'w') as f:
     f.write(response.content[-1]['text'])
   return "Prompt file generated Successfully, agent can read it"
-prompt_generator(model)
-# tool 2
 
+prompt_generator(model)
+# tool 2:
 def resume_maker_prompt():
-  """This function just gives updated prompt for model"""
+  """This function just gives
+  updated prompt for model"""
+
   with open('prompt.py', 'r') as f:
     prompt = f.read()
   return prompt
-resume_maker_prompt()
 
-# ===================Generator====================
-prompt = """you are a helpful ai assistant
-with job resume maker, your task is to give HTML format
-resume with proper designing ussin recent css and js code with professional design format
-user will upload data return html format rsume
-always use different styling and color palate and dont add any paragraph in starting like here is a starategic type just the resume  in the resume"""
+resume_maker_prompt()
+# ===========GENERATE RESUME========
+prompt = """You are a helpful AI assistant
+with job resume maker, your task is to give
+HTML format resume, with proper designing using recent CSS and JS
+code, with professional design Format.
+User will upload data and return HTML format resume
+always use different color or styling"""
 
 final_prompt = prompt + resume_maker_prompt()
-details = input("Enter your details : ")
-user_details = f"""user details : - given below :-{details}"""
+
+user_details = """user details: given below:
+Give Python Developer Resume"""
+
 query = final_prompt + user_details
 
-if st.button("Generate resume"):
-  with st.spinner("Running agent"):
-    response = agent.invoke({'messages': [{'role':'user','content':query}]})
+if st.button("Generate Resume"):
+  with st.spinner("Running Agent...."):
+
+    response = agent.invoke({'messages':[{'role':'user','content':query}]})
     code = response['messages'][-1].content[-1]['text']
 
-    #st.mardown(code)
-st.html(code, width="stretch",unsafe_allow_javascript=True)
+    #st.markdown(code)
+    st.html(code, width="stretch", unsafe_allow_javascript=True)
+
+
+
 
 
