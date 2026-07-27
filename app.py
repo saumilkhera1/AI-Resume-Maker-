@@ -28,7 +28,7 @@ TAVILY_API_KEY = st.sidebar.text_input("TAVILY_API_KEY",type ="password")
 
 #===========model building===============
 model = ChatGoogleGenerativeAI(
-    model = "gemini-3.5-flash-lite",
+    model = "gemini-1.5-flash",
     google_api_key = GOOGLE_API_KEY
 )
 # tool 
