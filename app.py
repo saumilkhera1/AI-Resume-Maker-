@@ -135,7 +135,7 @@ user_info = st.text_input("Enter your information")
 
 user_details = f"""user details: given below:-
 Resume info : {user_info}
-photo : {uploaded_photo}
+photo : {uploaded_file}
 photo present in the current directory with name as 
 uploaded_file and once the resume is generated give 
 download button in the same html code 
