@@ -120,7 +120,7 @@ LOCATION = st.sidebar.multiselect('SELECT LOCATION :- ',
                                  options = OPTIONS)
 JOB_PROFILE = ["PYTHON DEVLOPER","GEN AI EXPERT","FULLSTACK DEVELPER"]
 PROFILE = st.sidebar.multiselect('SELECT PROFILES :- ',
-                                 options = PROFILE)
+                                 options = JOB_PROFILE)
 
 job_prompt = f"""Based on {PROFILE} jobs in {LOCATION}, I
 want latest job news in using tavily,
